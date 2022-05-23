@@ -9,4 +9,4 @@ Un modèle d’analyse de sentiments et un modèle de recommandation de livres s
 
 Ainsi une fois que le client effectue une requête, les modèles seront appelés pour effectue respectivement l’analyse de sentiment et déterminer quelles recommandations doivent lui être apportés afin d’améliorer l’expérience utilisateur.
 
-<video src="./ebook_demo.mp4"></video>
+<video src="ebook_demo.mp4"></video>
