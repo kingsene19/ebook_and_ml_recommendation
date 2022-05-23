@@ -8,5 +8,3 @@ Comme nous pouvons le voir dans le schéma, le projet consiste en la création d
 Un modèle d’analyse de sentiments et un modèle de recommandation de livres sont également entrainés et stockés dans les outils de Django afin de pouvoir les chargés dans l’application.
 
 Ainsi une fois que le client effectue une requête, les modèles seront appelés pour effectue respectivement l’analyse de sentiment et déterminer quelles recommandations doivent lui être apportés afin d’améliorer l’expérience utilisateur.
-
-<video src="ebook_demo.mp4"></video>
