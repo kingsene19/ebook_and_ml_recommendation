@@ -1,0 +1,33 @@
+{% extends "../../base.html" %}
+
+
+{% block title %}Confirmation{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row no-gutter">
+        <div class="col-md-12">
+            <div class="login d-flex align-items-center py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-lg-10 mx-auto">
+                            <div class="p-4 text-center">
+                                <h3 class="mb-4">Votre compte a été supprimé avec succès!</h3>
+                                <p class="small text-muted">Nous somme navrés de votre départ</p>
+                            </div>       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    let f = document.getElementById('footer')
+    f.classList.add("fixed-bottom")
+</script>
+{% endblock %}

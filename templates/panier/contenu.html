@@ -1,0 +1,154 @@
+{% extends "../base.html" %}
+{% load static %}
+
+{% block title %}Contenu Panier{% endblock %}
+
+{% block content %}
+
+<div class="container" style="max-width: 1000px">
+    <div class="col-12 pt-5">
+        <h1 class="h2">Votre panier</h1>
+    </div>
+    <div class="col-12">
+        <p>Gérer les <b>articles</b> de votre panier</p>
+    </div>
+    <hr />
+</div>
+
+<div class="container" style="max-width: 1000px">
+    <div class="row g-3">
+        {% if panier|length == 0 %} 
+        <div class="col-12">Votre panier est vide <a href="../../">Boutique</a></div>
+        {% else %}
+        <div class="col-12 bg-light p-3 mb-4 d-flex justify-content-between">
+            <div class="d-flex d-flex-inline">
+                <div class="pr-3">Commande</div>
+            </div>
+            <div class="text-right">
+
+                <div class="">
+                    Sous Total:
+                    <div id="soustotal" class="d-inline-flex fw-bold">{{panier.soustotal_prix}} <span class="fw-bold">FCFA</span></div>
+                </div>
+                <div id="">Livraison <span class="small">(Classique)</span>: <span class="fw-bold">1500 FCFA</span>
+                </div>
+                <div class="pt-2">Total à payer: <span id="total" class="fw-bold h5">{{panier.total_prix}}</span><span class="fw-bold h5"> FCFA</span></div>
+
+            </div>
+        </div>
+        <div class="col-md-5 col-lg-4 order-md-last p-0 order-3 text-right">
+            <div class="d-grid gap-2 ">
+                <a role="button" href="{% url 'commandes:payer' %}" class="btn btn-success fw-bold" type="button">Paiement</a>
+            </div>
+        </div>
+        <div class="col-md-7 col-lg-8 p-0">
+
+            {% for item in panier %}
+            {% with produit=item.produit %}
+
+            <div class="card mb-3 border-0 produit-item" data-index="{{produit.id}}">
+                <div class="row g-0">
+                    <div class="col-md-2 d-none d-md-block">
+                        <img class="img-fluid mx-auto d-block" alt="Responsive image" src="{{ produit.image.url }}" />
+                    </div>
+                    <div class="col-md-10 ps-md-3">
+                        <div class="card-body p-1">
+                            <a class="text-decoration-none text-reset" href="{{item.produit.get_absolute_url}}">
+                                <p class="card-text pb-3">{{produit.titre}}</p>
+                            </a>
+                            <label for="select">Qte</label>
+                            <select id="select{{produit.id}}" style="width:50px;height:31px;">
+                                <option value="" selected disabled hidden>{{item.qte}}</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                                <option value="">4</option>
+                            </select>
+                            <a type="button" id="update-button" data-index="{{produit.id}}"
+                                class="update-button text-decoration-none small ps-3">Mettre à jour</a>
+                            <a type="button" id="delete-button" data-index="{{produit.id}}"
+                                class="delete-button text-decoration-none small">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endwith %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    </div>
+</div>
+
+{%endblock%}
+
+{% block extrajs %}
+
+
+{% if not panier %}
+<script>
+    let f = document.getElementById("footer")
+    f.classList.add('fixed-bottom')
+</script>
+{% endif %}
+
+<script>
+    // Supprimer produit
+    $(document).on("click", ".delete-button", function (e) {
+        e.preventDefault();
+        var prodid = $(this).data("index");
+        $.ajax({
+            type: "POST",
+            url: '{% url "panier:panier_supprimer" %}',
+            data: {
+                produitid: $(this).data("index"),
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                action: "post",
+            },
+            success: function (json) {
+                $('.product-item[data-index="' + prodid + '"]').remove();
+
+                if (json.qte == 0) {
+                    total = 0
+                    soustotal = 0
+                }
+                else {
+                    total = (parseInt(json.soustotal) + 1500);
+                    subtotal = json.soustotal
+                }
+
+                document.getElementById("soustotal").innerHTML = soustotal;
+                document.getElementById("panier_qte").innerHTML = json.qte;
+                document.getElementById("total").innerHTML = total;
+                location.reload()
+            },
+            error: function (xhr, errmsg, err) { },
+        });
+    });
+
+    // Update Item
+    $(document).on("click", ".update-button", function (e) {
+        e.preventDefault();
+        var prodid = $(this).data("index");
+        $.ajax({
+            type: "POST",
+            url: '{% url "panier:panier_maj" %}',
+            data: {
+                produitid: $(this).data("index"),
+                produitqte: $("#select" + prodid + " option:selected").text(),
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                action: "post",
+            },
+            success: function (json) {
+
+                total = (parseInt(json.soustotal) + 1500);
+                document.getElementById("panier_qte").innerHTML = json.qte;
+                document.getElementById("soustotal").innerHTML = json.soustotal;
+                document.getElementById("total").innerHTML = total;
+                location.reload()
+            },
+            error: function (xhr, errmsg, err) { },
+        });
+    });
+</script>
+
+{% endblock %}

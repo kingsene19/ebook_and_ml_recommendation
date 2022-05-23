@@ -1,0 +1,62 @@
+{% extends "../../base.html" %}
+
+{% block title %}S'incrire{% endblock %}
+
+{% block extracss %}
+
+<style>
+    .compte-form input {
+        border: 2px solid #ccc;
+    }
+
+    .compte-form input:focus {
+        border-color: #1497ff;
+        box-shadow: none;
+    }
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+
+            <div class="login d-flex align-items-center py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-lg-10 mx-auto">
+                            <form class="compte-form p-4 rounded col-lg-10 mx-auto" action="." method="post">
+                                {% csrf_token %}
+                                <h3 class="mb-2 font-weight-bold">Creer un compte </h3>
+                                <p class="mb-4">Gratuit et en moins d'une minute.</p>
+
+                                {% if form.errors %}
+                                <p>Veuillez recitifier les champs suivants:</p>
+                                {% for champ in form %}
+                                {% if champ.errors %}
+                                <div class="alert alert-primary" role="alert">
+                                    {{ champ.label }}: {{ champ.errors|striptags }}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                                {% endif %}
+
+                                <label>{{ form.prenoms.label }}<span class="text-danger small">(Requis)</span></label>{{ form.prenoms }}
+                                <label>{{ form.user_name.label }}<span class="text-danger small">(Requis)</span></label>{{ form.user_name }}
+                                <label>{{ form.email.label }}<span class="text-danger small">(Requis)</span></label>{{ form.email }}
+                                <label>{{ form.password.label }}<span class="text-danger mb-4"></span></label>
+                                <small class="form-text text-danger mb-4 small">Au moins 8 caractères et 1 chiffre</small>{{ form.password }}
+                                <label>{{ form.password2.label }}<span class="text-danger small">(Requis)</span></label>{{ form.password2 }}
+
+                                <button class="btn btn-primary btn-block py-2 mb-4 mt-5 fw500 w-100"
+                                    type="submit">S'inscrire</button>
+                                <p class="text-center">
+                                    <a href="{% url 'compte:connexion' %}" class="text-decoration-underline">Avez vous déjà un compte?</a>
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+{{ produit.nom }}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 1000px">
+
+{% if messages %}
+    <div class="alert alert-warning" alert-{{ messages.tags }} role="alert">*
+        {% for message in messages %}
+            {{ message|safe }} - <a href="{% url 'compte:souhaits' %}" class="alert-link">Votre Liste de souhaits</a>.
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if message %}
+<div class="container alert alert-danger">
+    {{message}}
+    <a href="{% url 'boutique:all_book' %}" class="alert-link text-end">All books</a>
+</div>
+{% endif %}
+
+    <div class="row g-3">
+        <div class="col-12 d-flex justify-content-between">
+        </div>
+        <div class="col-md-5 ps-3 col-lg-5 order-md-last p-0 order-1">
+            <div class="d-grid gap-2">
+                <div class="d-flex d-flex-inline justify-content-between">
+                    <div><span class="h3">{{ produit.prix }} FCFA</span></div>
+                    <div class="">
+                        <label for="select">Qte</label>
+                        <select id="select" class="h6" style="width:50px;height:40px;">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+                <hr>
+                <div class="text-right">
+                    <button type="button" id="add-button" value="{{produit.id}}" class="btn btn-success fw500 w-100 mb-2">Ajouter au
+                        panier</button>
+                    <a href="{% url 'compte:ajout_souhait' produit.id %}" class="btn btn-warning fw500 w-100 mb-2" >Ajouter à la liste des souhaits</a>
+                    <a type="button" class="btn btn-light fw500 w-100" href="{{ produit.get_relative_url }}">Revue</a>
+                </div>
+                <span class="lead">{{produit.editeur}}</span><span>(Editeur)</span><br>
+                <p>{{ produit.description|slice:":325" }}...</p>
+            </div>
+        </div>
+        <div class="col-md-7 col-lg-7 p-0">
+            <div class="card mb-3 border-0">
+                <div class="row g-0">
+                    <div class="col-md-12">
+                        <div class="card-body p-1">
+                            <h1 class="mb-0 h2 pe-4 pb-4">{{ produit.titre }}</h1>
+                            <div class="bg-light"><img class="img-fluid mx-auto d-block" width="250"
+                                    alt="Responsive image" src="{{ produit.image.url }}"> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if preds %}
+<hr>
+<div class="container alert alert-success h5">
+    You liked this book here so here are others users with similar taste also liked!
+</div>
+<div class="album py-5">
+    <div class="container-fluid">
+        <div class="row">
+            {% for pred in preds %}
+            <div class="col-md-3">
+                <div class="card mb-3 shadow-sm">
+                    <img class="card-img-top" src={{pred.1}} alt="Card image cap" height="300" width="450">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <a class="text-dark text-decoration-none link">{{ pred.0|title }}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+
+{%block extrajs%}
+<script>
+    // Ajouter élément
+    $(document).on('click', '#add-button', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "panier:panier_ajout" %}',
+            data: {
+                produitid: $('#add-button').val(),
+                produitqte: $('#select option:selected').text(),
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                action: 'post'
+            },
+            success: function (json) {
+                document.getElementById("panier_qte").innerHTML = json.qte
+            },
+            error: function (xhr, errmsg, err) { }
+        });
+    })
+</script>
+
+{% endblock %}
+

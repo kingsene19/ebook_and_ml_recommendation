@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extracss %}
+<style>
+.h3 {
+    margin-bottom: 16px;
+}
+
+.link{
+    font-weight: bold;
+}
+</style>
+{% endblock %}
+
+{% block title %} Tous les livres {% endblock %}
+
+{% block content %}
+
+<div class="album py-5 bg-light">
+    <div class="container">
+        <span class="h3">Tous les livres</span>
+        <div class="row">
+
+            {% for produit in produits %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img class="card-img-top" src="{{ produit.image.url }}" alt="Card image cap" height="300">
+                    <div class="card-body">
+                        <a class="text-dark text-decoration-none link" href="{{ produit.get_absolute_url }}">{{produit.titre}}</a>
+                        <p class="card-text">
+                            {{produit.description|slice:":140"}}...
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center text-right">
+                            <div class="btn-group">
+                                <a type="button" class="btn btn-sm btn-outline-secondary"
+                                    href="{{ produit.get_relative_url }}">Revue</a>
+                            </div>
+                            <small class="text-lead">{{produit.prix}} FCFA</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+
+{% if not produits %}
+    <script>
+        let f = document.getElementById("footer")
+        f.classList.add('fixed-bottom')
+    </script>
+{% endif %}
+
+{% endblock %}

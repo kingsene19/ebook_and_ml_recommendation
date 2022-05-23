@@ -1,0 +1,91 @@
+{% extends "../base.html" %}
+
+{% load static %}
+
+{% block title %}S'incrire{% endblock %}
+
+{% block extracss %}
+<style>
+    .paiement-form input {
+        border: 2px solid #ccc;
+    }
+    .paiement-form input:focus {
+        border-color: #1497ff;
+        box-shadow: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login d-flex align-items-center py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-10 mx-auto">
+                <form class="paiement-form p-4 rounded col-lg-10 mx-auto" action="{% url 'commandes:payer' %}" method="post">
+                    {% csrf_token %}
+                    <h3 class="mb-2 font-weight-bold">Portail de paiment</h3>
+
+                    {% if form.errors %}
+                    <p>Veuillez recitifier les champs suivants:</p>
+                    {% for champ in form %}
+                    {% if champ.errors %}
+                    <div class="alert alert-primary" role="alert">
+                        {{ champ.label }}: {{ champ.errors|striptags }}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{form.nom_complet.label}}</label>
+                                {{form.nom_complet}}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{form.region.label}}</label>
+                                {{form.region}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{form.email.label}}</label>
+                                {{form.email}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{form.adresse.label}}</label>
+                                {{form.adresse}}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{form.telephone.label}}</label>
+                                {{form.telephone}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{form.methode.label}}</label>
+                                {{form.methode}}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <button id="submit" class="btn btn-primary btn-block py-2 mb-4 mt-5 fw500 w-100" type="submit">Valider paiement</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

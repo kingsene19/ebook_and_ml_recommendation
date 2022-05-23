@@ -1,0 +1,53 @@
+{% extends "../../base.html" %}
+
+{% load static %}
+
+{% block title %}Liste de souhaits{%endblock %}
+
+{% block content %}
+<div class="container pt-5" style="max-width: 1000px">
+    <div class="col-12">
+        <h1 class="h2">Liste de vos souhaits</h1>
+    </div>
+    <div class="col-12 d-flex justify-content-between">
+        <div>Gérer vos <b>souhaits</b></div>
+    </div>
+    <hr />
+</div>
+
+<div class="container">
+    {% if produits %}
+    {% for produit in produits %}
+    <div class="card mb-3 rounded-0">
+        <div class="row g-0">
+            <div class="col-md-2">
+                <img class="img-fluid d-block p-2" width="135px" src="{{ produit.image.url }}"/>
+            </div>
+            <div class="col-md-10">
+                <div class="card-body">
+                    <a class="card-title h5 text-decoration-none text-dark" href="{{produit.get_absolute_url}}">{{produit.titre}}</a>
+                    <p class="card-text"><small class="text-dark">{{produit.prix}} FCFA</small></p><br>
+                    <a type="button" class="btn btn-primary fw500 btn-sm" href="{% url 'compte:ajout_souhait' produit.id %}">Supprimer de la liste</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="card-text">Vous n'avez pas encore ajouté de produit <a href="../../../">Boutique</a></p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+
+{% if not produits %}
+<script>
+    let f = document.getElementById("footer")
+    f.classList.add('fixed-bottom')
+</script>
+{% endif %}
+
+{% endblock %}
