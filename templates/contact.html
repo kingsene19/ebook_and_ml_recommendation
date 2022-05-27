@@ -17,12 +17,12 @@ color: white;
 
 {% block content%}
 
-<div class="container-lg py-3">
+<div class="container-fluid py-3">
     <div class="row">
         <div class="col-12 text-left">
-            <div class="titre p-3 mb-5 rounded">Contact</div>
+            <div class="titre p-3 mb-5 rounded">Contacts</div>
             <p>
-                <span><img src="{% static 'icons/mail_black_24dp1.svg' %}" alt=""> Mail: ebook@ebook.sn Postale: BP A10,Thiès, Sénégal</span> <br>
+                <span><img src="{% static 'icons/mail_black_24dp1.svg' %}" alt=""> Mail: ebook@ebook.sn Postale: BP A10,Thiès, Sénégal</span><br>
                 <span><img src="{% static 'icons/call-24px1.svg' %}" alt=""> Téléphone : 00221 33 951 15 48</span> <br>
                 <span><img src="{% static 'icons/telephone1.svg' %}" alt=""> Fax : 00221 22 951 14 76</span>
             </p>
@@ -39,15 +39,3 @@ color: white;
 </div>
 {% endblock %}
 
-{% comment %}
-{% block extrajs%}
-<script>
-    let ctn = document.getElementById('cnt')
-    let footer = document.getElementById('footer')
-
-    ctn.classList.add('active')
-    footer.classList.add('fixed-bottom')
-
-</script>
-{% endblock %}
-{% endcomment %}

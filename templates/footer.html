@@ -1,30 +1,32 @@
 {%load static%}
 
 <div class="container-fluid bg-dark" id="footer">
-    <div class="row pt-3">
-        <div class="col-4 border-right text-center">
-            <img src="{%static 'img/logo.jpg'%}" width="105px" class="bg-white rounded mb-3" />
-            <p class="text-light">
-                Copyright 2022 &copy | Ecole Polytechnique de Thiès
-            </p>
-        </div>
-        <div class="col-4 border-right">
-            <p class="h4 text-white"><span>Contacts</span></p>
-            <p class="text-light">
-                <span>Mail: ebook@ebook.sn</span><br />
-                <span>Postale: BP A10, Thiès,Sénégal</span><br />
-                <span>Téléphone: 00221 33 951 15 48</span><br />
-                <span>Fax: 00221 33 951 14 76</span>
-            </p>
-        </div>
-        <div class="col-4">
-            <p class="h4 text-white"><span>Social</span></p>
-            <div class="d-inline-flex py-3 align-items-center" id="socials">
-                <img src="{%static 'icons/iconmonstr-instagram-141.svg'%}" width="35px" style="padding-right: 5px;" />
-                <img src="{%static 'icons/facebook_black_24dp1.svg'%}" width="35px" style="padding-right: 5px;" />
-                <img src="{%static 'icons/iconmonstr-twitter-41.svg'%}" width="35px" style="padding-right: 5px;" />
-                <img src="{%static 'icons/iconmonstr-youtube-91.svg'%}" width="35px" style="padding-right: 5px;" />
-            </div>
-        </div>
+<div class="row pt-3 text-white">
+    <div class="col-md-4 col-lg-4 footer-about d-flex flex-column align-items-center justify-content-center">
+        <img class="logo-footer" src="{% static 'img/logo.jpg'%}" alt="logo-footer">
+        <p class="text-center">
+            Ebook est un site de vente en ligne de livres qui cherche à faciliter l'achat de livre électronique aux férus de la lecture.
+		</p>
     </div>
+    <div class="col-md-4 col-lg-4 offset-lg-1 footer-contact">
+        <h5>Contacts</h5>
+        <p><i class="fas fa-map-marker-alt" style="color:white;"></i> Ecole Polytechnique de Thiès</p>
+        <p><i class="fas fa-phone" style="color:white;"></i> Téléphone: 00221 33 951 15 48</p>
+        <p><i class="fas fa-envelope" style="color:white;"></i> Mail: <a href="#" class="text-white">ebook@ebook.sn</a></p>
+        <p><i class="fa fa-fax" style="color:white;"></i>Fax : 00221 22 951 14 76</p>
+    </div>
+    <div class="col-md-4 col-lg-3 footer-social wow fadeInUp">
+        <h5>Suivez Nous</h5>
+        <p>
+            <a href="#" class="text-white"><i class="fab fa-facebook"></i></a> 
+            <a href="#" class="text-white"><i class="fab fa-twitter"></i></a> 
+            <a href="#" class="text-white"><i class="fab fa-google-plus-g"></i></a> 
+            <a href="#" class="text-white"><i class="fab fa-instagram"></i></a> 
+            <a href="#" class="text-white"><i class="fab fa-pinterest"></i></a>
+        </p>
+    </div>
+    <div class="col-md-12 footer-copyright d-flex justify-content-center">
+        <p class="text-white">&copy; Copyright 2022 Ebook</p>
+    </div>
+</div>
 </div>
