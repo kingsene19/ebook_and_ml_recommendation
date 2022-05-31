@@ -27,58 +27,48 @@ def book_category(request, category_slug=None):
 
 def book_buy(request, slug):
     produit = get_object_or_404(Produit, slug=slug, en_stock=True)
-    try:
-        revue = produit.revue_set.filter(user_id=request.user.id)[0]
-    except Exception:
-        revue = []
-        return render(request, 'boutique/book_buy.html', {'produit': produit})
-    else:
-        if model_sa.predict([revue.contenu])[0] == 2:
-            preds = []
-            query_index = pivot_df.index.get_loc(produit.titre)
-            distances, indices = model_br.kneighbors(
-                pivot_df.iloc[query_index, :].values.reshape(1, -1), n_neighbors=6)
-            for i in range(len(distances.flatten())-1, 1, -1):
-                preds.append([pivot_df.index[indices.flatten()[i]], livres.loc[livres['bookTitle']
-                                                                               == pivot_df.index[indices.flatten()[i]]]['imageUrlS'].values[0]])
-            return render(request, 'boutique/book_buy.html', {'produit': produit, 'preds': preds})
-        else:
-            message = "Sorry you didn't like this book, try others from our Library"
-            return render(request, 'boutique/book_buy.html', {'produit': produit, 'message': message})
-
-
-def book_revue(request, slug):
-    livre = get_object_or_404(Produit, slug=slug)
-    revues = livre.revue_set.all()
+    revues = produit.revue_set.all()
     note = average_rating([revue.note for revue in revues])
-    return render(request, 'boutique/book_revue.html', {"produit": livre, "note": note, "revues": revues})
-
-
-@login_required
-def add_revue(request, slug):
+    cat = get_object_or_404(Categorie, slug="litterature")
     if request.method == "POST":
         user_id = request.user.id
-        livre = get_object_or_404(Produit, slug=slug)
         revueForm = RevueForm(request.POST)
         if revueForm.is_valid():
             note = revueForm.cleaned_data.get('note')
             avis = revueForm.cleaned_data.get('contenu')
             Revue.objects.create(
-                user_id=user_id, produit_id=livre.id, note=note, contenu=avis)
+                user_id=user_id, produit_id=produit.id, note=note, contenu=avis)
             prediction = model_sa.predict([avis])[0]
             if prediction == 2:
-                livre.revues_positives += 1
-                message = f'{request.user.prenoms} ravi de voire que ce livre vous ait plus. Votre satisfaction est notre bonheur 😊.'
-                livre.save()
+                produit.revues_positives += 1
             else:
-                livre.revues_negatives += 1
-                message = f'{request.user.prenoms} désolé que ce livre ne soit pas à la hauteur de vos attentes. Nous tenterons d\'améliorer votre expérience 😔'
-                livre.save()
-            return render(request, 'boutique/add_revue.html', {'form': revueForm, 'produit': livre, 'message': message})
+                produit.revues_negatives += 1
+            produit.save()
     else:
         revueForm = RevueForm()
-        livre = get_object_or_404(Produit, slug=slug)
-    return render(request, 'boutique/add_revue.html', {'form': revueForm, 'produit': livre})
+    if produit in Produit.objects.filter(categorie=cat):
+        try:
+            revue = produit.revue_set.filter(user_id=request.user.id)[0]
+        except Exception:
+            revue = []
+            return render(request, 'boutique/book_buy.html', {'produit': produit, 'produit': produit, "note": note, "revues": revues, 'form': revueForm})
+        else:
+            if model_sa.predict([revue.contenu])[0] == 2:
+                preds = []
+                query_index = pivot_df.index.get_loc(produit.titre)
+                distances, indices = model_br.kneighbors(
+                    pivot_df.iloc[query_index, :].values.reshape(1, -1), n_neighbors=6)
+                for i in range(len(distances.flatten())-1, 1, -1):
+                    preds.append([pivot_df.index[indices.flatten()[i]], livres.loc[livres['bookTitle']
+                                                                                   == pivot_df.index[indices.flatten()[i]]]['imageUrlS'].values[0]])
+                com = f'{request.user.prenoms} ravi de voire que ce livre vous ait plus. Votre satisfaction est notre bonheur 😊.'
+                produit.save()
+                return render(request, 'boutique/book_buy.html', {'produit': produit, "note": note, "revues": revues, 'com': com, 'preds': preds, 'form': revueForm})
+            else:
+                message = "Désolé que ce livre ne vous ai pas plu, parcourez notre bibliothèque"
+                com = f'{request.user.prenoms} désolé que ce livre ne soit pas à la hauteur de vos attentes. Nous tenterons d\'améliorer votre expérience 😔'
+                return render(request, 'boutique/book_buy.html', {'produit': produit, "note": note, "revues": revues, 'message': message, 'com': com, 'form': revueForm})
+    return render(request, 'boutique/book_buy.html', {'produit': produit, "note": note, "revues": revues, "form": revueForm})
 
 
 @login_required

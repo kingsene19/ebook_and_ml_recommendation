@@ -72,12 +72,6 @@ class Produit(models.Model):
     def get_absolute_url(self):
         return reverse('boutique:book_buy', args=[self.slug])
 
-    def get_relative_url(self):
-        return reverse('boutique:book_revue', args=[self.slug])
-
-    def get_third_url(self):
-        return reverse('boutique:revue', args=[self.slug])
-
     def get_mod_url(self):
         return reverse('boutique:modifier', args=[self.slug])
 
