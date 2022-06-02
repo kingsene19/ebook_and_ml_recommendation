@@ -103,7 +103,9 @@
         {{produit.description}}
     </p>
     <hr>
-    <h3 class="lead">Liste des revues</h3>
+    <h3 class="lead">Liste des revues ({{produit.revues_positives|add:produit.revues_negatives}})</h3>
+    <span class="text-info">Revues positives: </span><span class="badge badge-primary badge-pill mr-5">{{produit.revues_positives}}</span>
+    <span class="text-info ml-5">Revues négatives: </span><span class="badge badge-primary badge-pill">{{produit.revues_negatives}}</span><br><br>
     {% if note == 0 %}
         <span class="text-muted">Donnez une note et rédigez la première critique de ce livre.</span><br>
     {% else %}
@@ -136,7 +138,7 @@
             <i class="fa fa-plus-circle"></i>
         </a>
         {% else %}
-        <a type="button" class="btn rounded btn-outline-dark text-white" href="{% url 'compte:connexion' %}">
+        <a type="button" class="btn rounded btn-outline-light text-dark" href="{% url 'compte:connexion' %}">
             Connectez-vous pour laisser une revue
         </a>  
         {% endif %}
@@ -161,7 +163,7 @@
         <label>{{ form.note.label }}<span class="text-danger mb-4"></span></label>
         <small class="form-text text-danger mb-4 small">Doit être entre 1 et 5</small>{{ form.note }}
 
-        <button class=" btn btn-primary btn-block py-2 mb-4 mt-5 fw500 w-100" type="submit">Ajouter</button>
+        <button class="btn btn-primary btn-block py-2 mb-4 mt-5 fw500 w-100 return-btn" type="submit">Ajouter</button>
     </form>
 
     {% if com %}
@@ -206,19 +208,19 @@
 {%block extrajs%}
 <script>
 
-    (function()
-    {
-    if( window.localStorage )
-    {
-        if( !localStorage.getItem('firstLoad') )
-        {
-        localStorage['firstLoad'] = true;
-        window.location.reload();
-        }  
-        else
-        localStorage.removeItem('firstLoad');
-    }
-    })();
+    // Ajouter une revue
+    $(document).on("click", ".return-btn", function (e) {
+        var form = $(".revue-form");
+        form.submit(function() {
+            $.ajax({
+                success: function (json) {
+                    location.reload();
+                },
+                error: function (xhr, errmsg, err) { },
+            })
+        });
+    });
+
     // Ajouter élément
     $(document).on('click', '#add-button', function (e) {
         e.preventDefault();
