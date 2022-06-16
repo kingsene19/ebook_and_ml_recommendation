@@ -4,16 +4,16 @@ from joblib import load
 
 
 def load_models():
-    with open("C:\\Users\\Massamba Sene\\Documents\\GIT\\DIC1\\Projets\\Projet-Django-ML\\ebook\\boutique\\sentiment_analysis.pkl", "rb") as f:
+    with open("C:\\Users\\Massamba Sene\\Documents\\GIT\\DIC1\\Projets\\Projet-ML\\ebook\\boutique\\sentiment_analysis.pkl", "rb") as f:
         pipe_lr = pickle.load(f)
-    with open("C:\\Users\\Massamba Sene\\Documents\\GIT\\DIC1\\Projets\\Projet-Django-ML\\ebook\\boutique\\book_rec_model.pkl", "rb") as f:
+    with open("C:\\Users\\Massamba Sene\\Documents\\GIT\\DIC1\\Projets\\Projet-ML\\ebook\\boutique\\book_rec_model.pkl", "rb") as f:
         pipe_br = pickle.load(f)
     return pipe_lr, pipe_br
 
 
 def load_data():
     pivot_df, produits = load(
-        "C:\\Users\\Massamba Sene\\Documents\\GIT\\DIC1\\Projets\\Projet-Django-ML\\ebook\\boutique\\data.joblib")
+        "C:\\Users\\Massamba Sene\\Documents\\GIT\\DIC1\\Projets\\Projet-ML\\ebook\\boutique\\data.joblib")
     return pivot_df, produits
 
 

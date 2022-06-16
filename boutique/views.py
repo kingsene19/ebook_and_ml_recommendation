@@ -51,7 +51,7 @@ def book_buy(request, slug):
             revue = produit.revue_set.filter(user_id=request.user.id)[0]
         except Exception:
             revue = []
-            return render(request, 'boutique/book_buy.html', {'produit': produit, 'produit': produit, "note": note, "revues": revues, 'form': revueForm})
+            return render(request, 'boutique/book_buy.html', {'produit': produit, "note": note, "revues": revues, 'form': revueForm})
         else:
             if model_sa.predict([revue.contenu])[0] == 2:
                 preds = []
@@ -94,18 +94,27 @@ def mod_revue(request, slug):
         livre = get_object_or_404(Produit, slug=slug)
         user_id = request.user.id
         revue = livre.revue_set.filter(user_id=user_id)
+        revueid = revue[0]
         revueForm = RevueForm(request.POST)
         if revueForm.is_valid():
-            print("valide")
+            if model_sa.predict([revueid.contenu])[0] == 2:
+                livre.revues_positives -= 1
+            else:
+                livre.revues_negatives -= 1
             note = revueForm.cleaned_data.get('note')
             avis = revueForm.cleaned_data.get('contenu')
             revue.update(note=note)
             revue.update(contenu=avis)
-        return redirect(livre.get_relative_url())
+            if model_sa.predict([avis])[0] == 2:
+                livre.revues_positives += 1
+            else:
+                livre.revues_negatives += 1
+            livre.save()
+        return redirect(livre.get_absolute_url())
     else:
         revueForm = RevueForm()
         livre = get_object_or_404(Produit, slug=slug)
-    return render(request, 'boutique/add_revue.html', {'form': revueForm, 'produit': livre})
+    return render(request, 'boutique/mod_revue.html', {'form': revueForm, 'produit': livre})
 
 
 def home(request):

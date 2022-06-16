@@ -1,2 +1,4 @@
 Django==4.0.4
 django_countries==7.3.2
+sklearn
+nltk

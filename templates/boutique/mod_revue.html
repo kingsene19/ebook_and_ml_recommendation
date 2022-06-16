@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+{{ produit.nom }}
+{% endblock %}
+
+{% block extracss %}
+<style>
+    .revue-form input {
+        border: 2px solid #ccc;
+        height: calc(2em + .75rem + 2px);
+    }
+
+    .revue-form input:focus {
+        border-color: #1497ff;
+        box-shadow: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row g-3">
+        <div class="col-12 d-flex justify-content-center">   
+            <form class="revue-form p-4 rounded" action="{{produit.slug}}" method="post">
+                {% csrf_token %}
+                <h3 class="mb-4">Revue</h3>
+
+                {% if form.errors %}
+                <p>Veuillez recitifier les champs suivants:</p>
+                {% for champ in form %}
+                {% if champ.errors %}
+                <div class="alert alert-primary" role="alert">
+                    {{ champ.label }}: {{ champ.errors|striptags }}
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+
+                <label>{{ form.contenu.label }}<span class="text-danger small">(Requis)</span></label>{{ form.contenu }}
+                <label>{{ form.note.label }}<span class="text-danger mb-4"></span></label>
+                <small class="form-text text-danger mb-4 small">Doit être entre 1 et 5</small>{{ form.note }}
+
+                <button class="btn btn-primary btn-block py-2 mb-4 mt-5 fw500 w-100 return-btn" type="submit">Ajouter</button>
+            </form>
+        </div>
+    </div>   
+</div>
+
+{%endblock%}
